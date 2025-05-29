@@ -23,13 +23,42 @@ if not BOT_TOKEN:
     logger.error("TELEGRAM_BOT_TOKEN environment variable is required")
     sys.exit(1)
 
-try:
-    from telegram import Bot, Update
-    telegram_available = True
-    logger.info("Telegram components imported successfully")
-except ImportError as e:
-    logger.error(f"Telegram import failed: {e}")
-    telegram_available = False
+# Utilizziamo le API dirette di Telegram con httpx
+import httpx
+
+class Bot:
+    def __init__(self, token):
+        self.token = token
+        self.base_url = f"https://api.telegram.org/bot{token}"
+    
+    async def send_message(self, chat_id, text):
+        """Invia un messaggio usando le API dirette di Telegram."""
+        url = f"{self.base_url}/sendMessage"
+        payload = {
+            "chat_id": chat_id,
+            "text": text,
+            "parse_mode": "HTML"
+        }
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload)
+            return response.json()
+    
+    async def get_updates(self, offset=None, timeout=None):
+        """Ottiene gli aggiornamenti da Telegram."""
+        url = f"{self.base_url}/getUpdates"
+        params = {}
+        if offset:
+            params["offset"] = offset
+        if timeout:
+            params["timeout"] = timeout
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, params=params)
+            return response.json()
+
+telegram_available = True
+logger.info("Using direct Telegram API with httpx")
 
 # Import our lottery scraper
 try:

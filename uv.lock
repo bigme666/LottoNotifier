@@ -237,7 +237,7 @@ dependencies = [
 requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.13.4" },
     { name = "httpx", specifier = ">=0.25.2" },
-    { name = "python-telegram-bot", specifier = "==20.7" },
+    { name = "python-telegram-bot", specifier = ">=20.7" },
     { name = "requests", specifier = ">=2.32.3" },
     { name = "schedule", specifier = ">=1.2.2" },
     { name = "selenium", specifier = ">=4.33.0" },

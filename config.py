@@ -8,6 +8,7 @@ if not BOT_TOKEN:
 
 # Scraping configuration  
 LOTTO_URL = "https://www.televideo.rai.it/televideo/pub/solotesto.jsp?pagina=786"
+LOTTO_BASE_URL = "https://www.adm.gov.it"
 REQUEST_TIMEOUT = 30
 MAX_RETRIES = 3
 RETRY_DELAY = 5
