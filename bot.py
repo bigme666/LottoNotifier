@@ -1,7 +1,11 @@
 import logging
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
-from telegram.constants import ParseMode
+try:
+    from telegram.constants import ParseMode
+except ImportError:
+    # For older versions of python-telegram-bot
+    from telegram import ParseMode
 from scraper import LottoScraper
 from utils import format_lottery_results, get_current_timestamp
 from config import BOT_TOKEN
