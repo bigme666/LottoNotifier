@@ -44,6 +44,30 @@ class Bot:
             response = await client.post(url, json=payload)
             return response.json()
     
+    async def unpin_chat_message(self, chat_id):
+        """Rimuove il messaggio fissato dal canale."""
+        url = f"{self.base_url}/unpinChatMessage"
+        payload = {
+            "chat_id": chat_id
+        }
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload)
+            return response.json()
+    
+    async def pin_chat_message(self, chat_id, message_id):
+        """Fissa un messaggio nel canale."""
+        url = f"{self.base_url}/pinChatMessage"
+        payload = {
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "disable_notification": True
+        }
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload)
+            return response.json()
+    
     async def get_updates(self, offset=None, timeout=None):
         """Ottiene gli aggiornamenti da Telegram."""
         url = f"{self.base_url}/getUpdates"
@@ -200,11 +224,11 @@ Comandi disponibili:
     async def get_updates(self, offset=None):
         """Get updates from Telegram."""
         try:
-            updates = await self.bot.get_updates(offset=offset, timeout=30)
-            return updates
+            response = await self.bot.get_updates(offset=offset, timeout=30)
+            return response
         except Exception as e:
             logger.error(f"Error getting updates: {e}")
-            return []
+            return {"ok": False, "result": []}
     
     async def run(self):
         """Main bot loop."""

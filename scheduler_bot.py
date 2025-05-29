@@ -41,6 +41,30 @@ class Bot:
         async with httpx.AsyncClient() as client:
             response = await client.post(url, json=payload)
             return response.json()
+    
+    async def unpin_chat_message(self, chat_id):
+        """Rimuove il messaggio fissato dal canale."""
+        url = f"{self.base_url}/unpinChatMessage"
+        payload = {
+            "chat_id": chat_id
+        }
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload)
+            return response.json()
+    
+    async def pin_chat_message(self, chat_id, message_id):
+        """Fissa un messaggio nel canale."""
+        url = f"{self.base_url}/pinChatMessage"
+        payload = {
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "disable_notification": True
+        }
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload)
+            return response.json()
 
 # Configurazione logging
 logging.basicConfig(
@@ -119,17 +143,45 @@ class LotteryScheduler:
             return False
     
     async def send_results_to_channel(self, results: dict) -> None:
-        """Invia i risultati al canale Telegram."""
+        """Invia i risultati al canale Telegram con gestione del messaggio fissato."""
         try:
             if not self.bot:
                 logger.error("Bot non disponibile per l'invio al canale")
                 return
             
+            # Step 1: Rimuovi il messaggio fissato precedente
+            logger.info("Rimozione del messaggio fissato precedente...")
+            unpin_response = await self.bot.unpin_chat_message(chat_id=self.channel_id)
+            
+            if unpin_response.get('ok'):
+                logger.info("✓ Messaggio fissato precedente rimosso")
+            else:
+                logger.info("Nessun messaggio fissato da rimuovere")
+            
+            # Step 2: Invia il nuovo messaggio con i risultati
             formatted_message = format_lottery_results(results)
             message = f"🎰 NUOVA ESTRAZIONE DEL LOTTO!\n\n{formatted_message}"
             
-            await self.bot.send_message(chat_id=self.channel_id, text=message)
-            logger.info(f"Risultati inviati al canale {self.channel_id}")
+            send_response = await self.bot.send_message(chat_id=self.channel_id, text=message)
+            
+            if send_response.get('ok'):
+                message_id = send_response.get('result', {}).get('message_id')
+                logger.info(f"✓ Risultati inviati al canale {self.channel_id} (ID: {message_id})")
+                
+                # Step 3: Fissa il nuovo messaggio
+                if message_id:
+                    pin_response = await self.bot.pin_chat_message(
+                        chat_id=self.channel_id, 
+                        message_id=message_id
+                    )
+                    
+                    if pin_response.get('ok'):
+                        logger.info("✓ Nuovo messaggio fissato in alto nel canale")
+                    else:
+                        logger.warning("⚠️ Non è stato possibile fissare il messaggio")
+                        
+            else:
+                logger.error(f"Errore nell'invio del messaggio: {send_response.get('description', 'Errore sconosciuto')}")
             
         except Exception as e:
             logger.error(f"Errore inviando al canale: {e}")
