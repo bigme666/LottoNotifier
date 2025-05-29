@@ -30,7 +30,7 @@ args = "Working Bot"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Updated Lottery Bot"
+args = "RAI Lottery Bot"
 
 [[workflows.workflow]]
 name = "Lottery Bot"
@@ -65,12 +65,12 @@ task = "shell.exec"
 args = "python working_bot.py"
 
 [[workflows.workflow]]
-name = "Updated Lottery Bot"
+name = "RAI Lottery Bot"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python updated_lottery_bot.py"
+args = "python rai_lottery_bot.py"
 
 [deployment]
 run = ["sh", "-c", "uv add python-telegram-bot requests beautifulsoup4 && python main.py"]
