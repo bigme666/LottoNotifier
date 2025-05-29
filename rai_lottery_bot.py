@@ -89,62 +89,62 @@ class RaiLotteryBot:
     async def send_start_message(self, chat_id):
         """Send welcome message."""
         welcome_message = """
-Welcome to the Italian Lottery Results Bot!
+Benvenuto nel Bot dei Risultati del Lotto Italiano!
 
-This bot fetches the latest lottery results from RAI Televideo.
+Questo bot recupera gli ultimi risultati del lotto da RAI Televideo.
 
-Available commands:
-/start - Show this welcome message
-/help - Show help information
-/lotto - Get latest lottery results
-/ultima - Get latest lottery results (same as /lotto)
+Comandi disponibili:
+/start - Mostra questo messaggio di benvenuto
+/help - Mostra informazioni di aiuto
+/lotto - Ottieni gli ultimi risultati del lotto
+/ultima - Ottieni gli ultimi risultati del lotto (stesso di /lotto)
 
-Data source: RAI Televideo (https://www.televideo.rai.it)
+Fonte dati: RAI Televideo (https://www.televideo.rai.it)
         """
         await self.bot.send_message(chat_id=chat_id, text=welcome_message)
     
     async def send_help_message(self, chat_id):
         """Send help message."""
         help_message = """
-Italian Lottery Bot Help
+Aiuto Bot Lotto Italiano
 
-Commands:
-• /start - Welcome message and overview
-• /help - This help message  
-• /lotto - Fetch latest lottery results
-• /ultima - Same as /lotto
+Comandi:
+• /start - Messaggio di benvenuto e panoramica
+• /help - Questo messaggio di aiuto  
+• /lotto - Recupera gli ultimi risultati del lotto
+• /ultima - Stesso di /lotto
 
-The bot fetches official lottery results from RAI Televideo and provides you with the most recent drawing results.
+Il bot recupera i risultati ufficiali del lotto da RAI Televideo e ti fornisce i risultati dell'estrazione più recente.
 
-Results include numbers drawn for major Italian cities like Roma, Milano, Napoli, Bari, Cagliari, Firenze, Genova, Palermo, Torino, Venezia, and others.
+I risultati includono i numeri estratti per le principali città italiane come Roma, Milano, Napoli, Bari, Cagliari, Firenze, Genova, Palermo, Torino, Venezia e altre.
         """
         await self.bot.send_message(chat_id=chat_id, text=help_message)
     
     async def send_test_message(self, chat_id):
         """Test connection to RAI Televideo."""
-        await self.bot.send_message(chat_id=chat_id, text="🔄 Testing connection to RAI Televideo...")
+        await self.bot.send_message(chat_id=chat_id, text="Test connessione a RAI Televideo...")
         
         if not self.scraper:
-            await self.bot.send_message(chat_id=chat_id, text="❌ Lottery scraper not available")
+            await self.bot.send_message(chat_id=chat_id, text="Scraper del lotto non disponibile")
             return
         
         try:
             # Test if we can fetch the page
             html_content = self.scraper.fetch_page()
             if html_content:
-                await self.bot.send_message(chat_id=chat_id, text="✅ Successfully connected to RAI Televideo!")
+                await self.bot.send_message(chat_id=chat_id, text="Connessione riuscita a RAI Televideo!")
             else:
-                await self.bot.send_message(chat_id=chat_id, text="❌ Failed to connect to RAI Televideo")
+                await self.bot.send_message(chat_id=chat_id, text="Connessione fallita a RAI Televideo")
         except Exception as e:
             logger.error(f"Test command error: {e}")
-            await self.bot.send_message(chat_id=chat_id, text=f"❌ Connection test failed: {str(e)}")
+            await self.bot.send_message(chat_id=chat_id, text=f"Test di connessione fallito: {str(e)}")
     
     async def send_lottery_results(self, chat_id):
         """Send lottery results."""
-        await self.bot.send_message(chat_id=chat_id, text="🎲 Fetching latest lottery results from RAI Televideo...")
+        await self.bot.send_message(chat_id=chat_id, text="Recupero gli ultimi risultati del lotto da RAI Televideo...")
         
         if not self.scraper:
-            await self.bot.send_message(chat_id=chat_id, text="❌ Lottery scraper not available")
+            await self.bot.send_message(chat_id=chat_id, text="Scraper del lotto non disponibile")
             return
         
         try:
@@ -153,19 +153,19 @@ Results include numbers drawn for major Italian cities like Roma, Milano, Napoli
                 formatted_message = format_lottery_results(results)
                 await self.bot.send_message(chat_id=chat_id, text=formatted_message)
             else:
-                await self.bot.send_message(chat_id=chat_id, text="❌ No lottery results found. Please try again later.")
+                await self.bot.send_message(chat_id=chat_id, text="Nessun risultato del lotto trovato. Riprova più tardi.")
         except Exception as e:
             logger.error(f"Error fetching lottery results: {e}")
-            await self.bot.send_message(chat_id=chat_id, text=f"❌ Error fetching results: {str(e)}")
+            await self.bot.send_message(chat_id=chat_id, text=f"Errore nel recupero dei risultati: {str(e)}")
     
     async def send_unknown_command(self, chat_id):
         """Send message for unknown commands."""
-        message = """❓ Unknown command. 
+        message = """Comando sconosciuto. 
 
-Available commands:
-/help - Show help information
-/lotto - Get latest lottery results
-/test - Test RAI Televideo connection"""
+Comandi disponibili:
+/help - Mostra informazioni di aiuto
+/lotto - Ottieni gli ultimi risultati del lotto
+/ultima - Ottieni gli ultimi risultati del lotto"""
         await self.bot.send_message(chat_id=chat_id, text=message)
     
     async def get_updates(self, offset=None):
