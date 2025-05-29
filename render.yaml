@@ -1,0 +1,30 @@
+services:
+- type: cron
+  name: lotto-bot-20-15
+  schedule: "15 20 * * *"   # ogni giorno alle 20:15
+  command: "python scheduler_bot.py"
+  envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        value: 8131597720:AAEd1vGmLPYtCcjydwQgTX4OA6_diOzcGJ4
+      - key: CHANNEL_USERNAME
+        value: @estrazionilotto
+
+- type: cron
+  name: lotto-bot-20-20
+  schedule: "20 20 * * *"   # ogni giorno alle 20:20
+  command: "python scheduler_bot.py"
+  envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        value: 8131597720:AAEd1vGmLPYtCcjydwQgTX4OA6_diOzcGJ4
+      - key: CHANNEL_USERNAME
+        value: @estrazionilotto
+
+- type: cron
+  name: lotto-bot-20-25
+  schedule: "25 20 * * *"   # ogni giorno alle 20:25
+  command: "python scheduler_bot.py"
+  envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        value: 8131597720:AAEd1vGmLPYtCcjydwQgTX4OA6_diOzcGJ4
+      - key: CHANNEL_USERNAME
+        value: @estrazionilotto
