@@ -1,7 +1,0 @@
-services:
-- type: background
-  name: lotto-bot
-  env: python
-  buildCommand: ""
-  startCommand: "python working_bot.py"
-  autoDeploy: true
