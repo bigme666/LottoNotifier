@@ -5,9 +5,6 @@ description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
     "beautifulsoup4>=4.13.4",
-    "lxml>=5.4.0",
-    "python-telegram-bot==21.5",
+    "python-telegram-bot>=22.1",
     "requests>=2.32.3",
-    "telegram>=0.0.1",
-    "trafilatura>=2.0.0",
 ]
