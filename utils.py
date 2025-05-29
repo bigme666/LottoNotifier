@@ -27,10 +27,10 @@ def format_lottery_results(results: Dict) -> str:
     # Add extraction info if available
     if 'extraction_date' in results:
         message_lines.append(f"Data: {results['extraction_date']}")
-    if 'extraction_number' in results:
+    if 'extraction_number' in results and results['extraction_number']:
         message_lines.append(f"Estrazione N: {results['extraction_number']}")
     
-    if 'extraction_date' in results or 'extraction_number' in results:
+    if 'extraction_date' in results:
         message_lines.append("")
     
     # Add results for each city in compact format

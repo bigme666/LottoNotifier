@@ -160,21 +160,21 @@ class RaiLottoScraper:
                     logger.info(f"Found extraction date: {matches[0]}")
                     break
             
-            # Look for extraction number patterns
-            extraction_patterns = [
-                r'ESTRAZIONE\s+N[°.]?\s*(\d+)',
-                r'N[°.]?\s*(\d+)',
-                r'CONCORSO\s+(\d+)',
-                r'(\d+)[°]\s*ESTRAZIONE',
-                r'(\d+)[°]\s*CONCORSO',
-            ]
-            
-            for pattern in extraction_patterns:
-                match = re.search(pattern, text_content, re.IGNORECASE)
-                if match:
-                    results['extraction_number'] = match.group(1)
-                    logger.info(f"Found extraction number: {match.group(1)}")
-                    break
+            # Note: Extraction number parsing disabled due to unreliable data
+            # extraction_patterns = [
+            #     r'ESTRAZIONE\s+N[°.]?\s*(\d+)',
+            #     r'N[°.]?\s*(\d+)',
+            #     r'CONCORSO\s+(\d+)',
+            #     r'(\d+)[°]\s*ESTRAZIONE',
+            #     r'(\d+)[°]\s*CONCORSO',
+            # ]
+            # 
+            # for pattern in extraction_patterns:
+            #     match = re.search(pattern, text_content, re.IGNORECASE)
+            #     if match:
+            #         results['extraction_number'] = match.group(1)
+            #         logger.info(f"Found extraction number: {match.group(1)}")
+            #         break
                     
         except Exception as e:
             logger.error(f"Error extracting extraction info: {e}")
