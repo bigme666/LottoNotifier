@@ -1,0 +1,22 @@
+services:
+  # Bot principale per i comandi degli utenti
+  - type: web
+    name: lottery-bot
+    env: python
+    buildCommand: pip install httpx requests beautifulsoup4 schedule
+    startCommand: python fixed_bot.py
+    plan: free
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+    
+  # Scheduler per i controlli automatici serali
+  - type: worker
+    name: lottery-scheduler  
+    env: python
+    buildCommand: pip install httpx requests beautifulsoup4 schedule
+    startCommand: python scheduler_bot.py
+    plan: free
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
