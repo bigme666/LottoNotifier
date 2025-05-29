@@ -20,6 +20,10 @@ args = "Lottery Bot"
 task = "workflow.run"
 args = "install_and_run"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Simple Bot Test"
+
 [[workflows.workflow]]
 name = "Lottery Bot"
 author = "agent"
@@ -35,6 +39,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "uv add python-telegram-bot requests beautifulsoup4 && python main.py"
+
+[[workflows.workflow]]
+name = "Simple Bot Test"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python simple_bot.py"
 
 [deployment]
 run = ["sh", "-c", "uv add python-telegram-bot requests beautifulsoup4 && python main.py"]
