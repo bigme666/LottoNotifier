@@ -134,6 +134,26 @@ class LotteryScheduler:
         except Exception as e:
             logger.error(f"Errore inviando al canale: {e}")
     
+    async def test_channel_send(self) -> None:
+        """Testa l'invio di un messaggio al canale."""
+        try:
+            logger.info("=== TEST INVIO AL CANALE ===")
+            
+            # Ottieni i risultati correnti per il test
+            results = self.scraper.get_latest_results()
+            
+            if results and 'extraction_date' in results:
+                await self.send_results_to_channel(results)
+                logger.info("Test completato con successo!")
+            else:
+                # Invia un messaggio di test semplice
+                test_message = "🧪 Test di connessione al canale dal Bot delle Estrazioni del Lotto"
+                await self.bot.send_message(chat_id=self.channel_id, text=test_message)
+                logger.info("Messaggio di test inviato al canale!")
+                
+        except Exception as e:
+            logger.error(f"Errore durante il test del canale: {e}")
+
     async def scheduled_check(self) -> None:
         """Esegue un controllo programmato."""
         logger.info("=== CONTROLLO PROGRAMMATO INIZIATO ===")
