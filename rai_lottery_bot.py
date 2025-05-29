@@ -89,7 +89,7 @@ class RaiLotteryBot:
     async def send_start_message(self, chat_id):
         """Send welcome message."""
         welcome_message = """
-Benvenuto nel Bot dei Risultati del Lotto Italiano!
+Benvenuto nel Bot delle Estrazioni del Lotto!
 
 Questo bot recupera gli ultimi risultati del lotto da RAI Televideo.
 
