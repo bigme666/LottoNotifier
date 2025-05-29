@@ -59,7 +59,7 @@ class LotteryScheduler:
     def __init__(self):
         self.scraper = RaiLottoScraper()
         self.bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
-        self.channel_id = "estrazionilotto"  # ID del canale Telegram
+        self.channel_id = "@estrazionilotto"  # ID del canale Telegram
         self.last_extraction_file = "last_extraction.txt"
         self.bot = None
         

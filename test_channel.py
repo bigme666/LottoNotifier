@@ -29,12 +29,8 @@ class ChannelTester:
         self.base_url = f"https://api.telegram.org/bot{self.bot_token}"
         self.scraper = RaiLottoScraper()
         
-        # Diversi formati da testare per il canale
-        self.channel_variants = [
-            "@estrazionilotto",
-            "estrazionilotto", 
-            "-1001234567890"  # Placeholder per ID numerico se necessario
-        ]
+        # Formato del canale da testare
+        self.channel_id = "@estrazionilotto"
     
     async def send_message(self, chat_id, text):
         """Invia un messaggio al canale."""
@@ -83,7 +79,7 @@ class ChannelTester:
             timestamp = datetime.now().strftime("%H:%M:%S del %d/%m/%Y")
             message = f"🧪 Test di connessione al canale\n\nBot delle Estrazioni del Lotto\nTest eseguito alle {timestamp}"
             
-            result = await self.send_message(message)
+            result = await self.send_message(self.channel_id, message)
             
             if result.get('ok'):
                 logger.info("✅ Messaggio di test inviato con successo!")
@@ -104,7 +100,7 @@ class ChannelTester:
                 formatted_message = format_lottery_results(results)
                 message = f"🎰 TEST - RISULTATI DEL LOTTO\n\n{formatted_message}\n\n📝 Questo è un messaggio di test"
                 
-                result = await self.send_message(message)
+                result = await self.send_message(self.channel_id, message)
                 
                 if result.get('ok'):
                     logger.info("✅ Risultati del lotto inviati con successo!")
