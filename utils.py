@@ -16,27 +16,37 @@ def format_lottery_results(results: Dict) -> str:
         Formatted string message
     """
     if not results:
-        return "❌ Nessun risultato disponibile al momento."
+        return "Nessun risultato disponibile al momento."
     
-    message = "🎱 **RISULTATI LOTTO** 🎱\n\n"
+    message_lines = []
     
-    # Add extraction date if available
-    if 'date' in results:
-        message += f"📅 **Data estrazione:** {results['date']}\n"
+    # Header
+    message_lines.append("LOTTO - Risultati Ultima Estrazione")
+    message_lines.append("")
     
+    # Add extraction info if available
+    if 'extraction_date' in results:
+        message_lines.append(f"Data: {results['extraction_date']}")
     if 'extraction_number' in results:
-        message += f"🔢 **Concorso:** {results['extraction_number']}\n\n"
+        message_lines.append(f"Estrazione N: {results['extraction_number']}")
     
-    # Add results for each city
+    if 'extraction_date' in results or 'extraction_number' in results:
+        message_lines.append("")
+    
+    # Add results for each city in compact format
     if 'cities' in results:
         for city, numbers in results['cities'].items():
             if numbers:
-                numbers_str = " - ".join(map(str, numbers))
-                message += f"🏛️ **{city.upper()}**\n{numbers_str}\n\n"
+                numbers_str = " ".join(f"{num:>2}" for num in numbers)
+                message_lines.append(f"{city:<10}: {numbers_str}")
     
-    message += "ℹ️ Fonte: ADM - Agenzia delle Dogane e dei Monopoli"
+    # Footer
+    message_lines.append("")
+    message_lines.append(f"Fonte: {results.get('source', 'RAI Televideo')}")
+    if 'timestamp' in results:
+        message_lines.append(f"Aggiornato: {results['timestamp']}")
     
-    return message
+    return "\n".join(message_lines)
 
 def validate_lottery_data(data: Dict) -> bool:
     """

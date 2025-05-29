@@ -76,10 +76,10 @@ class RaiLotteryBot:
                 await self.send_start_message(chat_id)
             elif text.startswith('/help'):
                 await self.send_help_message(chat_id)
-            elif text.startswith('/lotto') or text.startswith('/latest'):
+            elif text.startswith('/lotto') or text.startswith('/ultima'):
                 await self.send_lottery_results(chat_id)
-            elif text.startswith('/test'):
-                await self.send_test_message(chat_id)
+            # elif text.startswith('/test'):
+            #     await self.send_test_message(chat_id)
             else:
                 await self.send_unknown_command(chat_id)
                 
@@ -89,7 +89,7 @@ class RaiLotteryBot:
     async def send_start_message(self, chat_id):
         """Send welcome message."""
         welcome_message = """
-🎰 Welcome to the Italian Lottery Results Bot!
+Welcome to the Italian Lottery Results Bot!
 
 This bot fetches the latest lottery results from RAI Televideo.
 
@@ -97,8 +97,7 @@ Available commands:
 /start - Show this welcome message
 /help - Show help information
 /lotto - Get latest lottery results
-/latest - Get latest lottery results (same as /lotto)
-/test - Test connection to RAI Televideo
+/ultima - Get latest lottery results (same as /lotto)
 
 Data source: RAI Televideo (https://www.televideo.rai.it)
         """
@@ -107,14 +106,13 @@ Data source: RAI Televideo (https://www.televideo.rai.it)
     async def send_help_message(self, chat_id):
         """Send help message."""
         help_message = """
-🎰 Italian Lottery Bot Help
+Italian Lottery Bot Help
 
 Commands:
 • /start - Welcome message and overview
 • /help - This help message  
 • /lotto - Fetch latest lottery results
-• /latest - Same as /lotto
-• /test - Test RAI Televideo connection
+• /ultima - Same as /lotto
 
 The bot fetches official lottery results from RAI Televideo and provides you with the most recent drawing results.
 

@@ -145,14 +145,19 @@ class RaiLottoScraper:
             
             # Look for date patterns (various Italian formats)
             date_patterns = [
-                r'(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})',  # DD/MM/YYYY, DD-MM-YYYY, etc.
-                r'(\d{1,2}\s+[A-Za-z]+\s+\d{2,4})',  # DD Month YYYY
+                r'(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{4})',  # DD/MM/YYYY, DD-MM-YYYY, etc.
+                r'(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2})',  # DD/MM/YY, DD-MM-YY, etc.
+                r'(\d{1,2}\s+[A-Za-z]+\s+\d{4})',  # DD Month YYYY
+                r'(\d{1,2}\s[A-Za-z]+\s\d{4})',  # DD Month YYYY (single space)
+                r'(\d{4}[\/\-\.]\d{1,2}[\/\-\.]\d{1,2})',  # YYYY/MM/DD
             ]
             
             for pattern in date_patterns:
-                match = re.search(pattern, text_content)
-                if match:
-                    results['extraction_date'] = match.group(1)
+                matches = re.findall(pattern, text_content)
+                if matches:
+                    # Take the most recent looking date
+                    results['extraction_date'] = matches[0]
+                    logger.info(f"Found extraction date: {matches[0]}")
                     break
             
             # Look for extraction number patterns
@@ -160,12 +165,15 @@ class RaiLottoScraper:
                 r'ESTRAZIONE\s+N[°.]?\s*(\d+)',
                 r'N[°.]?\s*(\d+)',
                 r'CONCORSO\s+(\d+)',
+                r'(\d+)[°]\s*ESTRAZIONE',
+                r'(\d+)[°]\s*CONCORSO',
             ]
             
             for pattern in extraction_patterns:
                 match = re.search(pattern, text_content, re.IGNORECASE)
                 if match:
                     results['extraction_number'] = match.group(1)
+                    logger.info(f"Found extraction number: {match.group(1)}")
                     break
                     
         except Exception as e:
