@@ -220,12 +220,15 @@ Comandi disponibili:
         
         while True:
             try:
-                updates = await self.get_updates(offset)
+                response = await self.get_updates(offset)
                 
-                for update in updates:
-                    # Process each update
-                    await self.handle_message(update.to_dict())
-                    offset = update.update_id + 1
+                if response.get('ok') and response.get('result'):
+                    updates = response['result']
+                    
+                    for update in updates:
+                        # Process each update
+                        await self.handle_message(update)
+                        offset = update['update_id'] + 1
                 
                 # Small delay to prevent excessive API calls
                 await asyncio.sleep(1)
