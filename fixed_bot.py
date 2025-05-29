@@ -72,6 +72,7 @@ class FixedLotteryBot:
         self.bot_token = BOT_TOKEN
         self.bot = Bot(self.bot_token)
         self.scraper = RaiLottoScraper() if scraper_available else None
+        self.processed_messages = set()  # Track processed message IDs
         logger.info("Fixed lottery bot initialized")
     
     async def handle_message(self, update_data: Dict[str, Any]):
@@ -83,11 +84,22 @@ class FixedLotteryBot:
             message = update_data['message']
             if 'text' not in message:
                 return
+            
+            # Check for duplicate messages
+            message_id = message.get('message_id')
+            if message_id in self.processed_messages:
+                logger.info(f"Skipping duplicate message {message_id}")
+                return
+            
+            # Add to processed messages (keep last 100 to prevent memory issues)
+            self.processed_messages.add(message_id)
+            if len(self.processed_messages) > 100:
+                self.processed_messages = set(list(self.processed_messages)[-50:])
                 
             text = message['text'].strip()
             chat_id = message['chat']['id']
             
-            logger.info(f"Received message: {text} from chat {chat_id}")
+            logger.info(f"Processing message: {text} from chat {chat_id} (ID: {message_id})")
             
             if text == '/start':
                 await self.send_start_message(chat_id)

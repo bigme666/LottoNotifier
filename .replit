@@ -36,6 +36,10 @@ args = "Scheduler Test"
 task = "workflow.run"
 args = "Fixed Bot"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Fixed Bot Test"
+
 [[workflows.workflow]]
 name = "Lottery Bot"
 author = "agent"
@@ -78,6 +82,14 @@ args = "python scheduler_bot.py"
 
 [[workflows.workflow]]
 name = "Fixed Bot"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python fixed_bot.py"
+
+[[workflows.workflow]]
+name = "Fixed Bot Test"
 author = "agent"
 
 [[workflows.workflow.tasks]]
