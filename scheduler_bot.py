@@ -19,7 +19,28 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from rai_scraper import RaiLottoScraper
 from utils import format_lottery_results
-from rai_lottery_bot import Bot
+# Configurazione per telegram
+import httpx
+import asyncio
+import json
+
+class Bot:
+    def __init__(self, token):
+        self.token = token
+        self.base_url = f"https://api.telegram.org/bot{token}"
+    
+    async def send_message(self, chat_id, text):
+        """Invia un messaggio al canale o chat specificato."""
+        url = f"{self.base_url}/sendMessage"
+        payload = {
+            "chat_id": chat_id,
+            "text": text,
+            "parse_mode": "HTML"
+        }
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload)
+            return response.json()
 
 # Configurazione logging
 logging.basicConfig(
@@ -38,7 +59,7 @@ class LotteryScheduler:
     def __init__(self):
         self.scraper = RaiLottoScraper()
         self.bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
-        self.channel_id = "@estrazionilotto"  # ID del canale Telegram
+        self.channel_id = "estrazionilotto"  # ID del canale Telegram
         self.last_extraction_file = "last_extraction.txt"
         self.bot = None
         
