@@ -12,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
-from config import LOTTO_URL, REQUEST_TIMEOUT, MAX_RETRIES, RETRY_DELAY, USER_AGENT
+from config import LOTTO_BASE_URL, REQUEST_TIMEOUT, MAX_RETRIES, RETRY_DELAY, USER_AGENT
 from utils import rate_limit_delay, validate_lottery_data
 
 logger = logging.getLogger(__name__)
@@ -62,10 +62,14 @@ class LottoScraper:
             logger.error(f"Failed to setup Chrome driver: {e}")
             return False
 
-    def fetch_page(self) -> Optional[str]:
+    def fetch_page(self, prog: int, anno: int) -> Optional[str]:
         """
         Fetch the lottery results page with retry logic.
         First tries with requests, then falls back to Selenium for dynamic content.
+        
+        Args:
+            prog: Program number (drawing number)
+            anno: Year
         
         Returns:
             HTML content of the page or None if failed
@@ -75,8 +79,10 @@ class LottoScraper:
             try:
                 rate_limit_delay(self.last_request_time, 2.0)
                 
-                logger.info(f"Fetching lottery data with requests (attempt {attempt + 1}/{MAX_RETRIES})")
-                response = self.session.get(LOTTO_URL, timeout=REQUEST_TIMEOUT)
+                # Build URL with prog and anno parameters
+                url = f"{LOTTO_BASE_URL}?prog={prog}&anno={anno}"
+                logger.info(f"Fetching lottery data with requests (attempt {attempt + 1}/{MAX_RETRIES}) from: {url}")
+                response = self.session.get(url, timeout=REQUEST_TIMEOUT)
                 self.last_request_time = time.time()
                 
                 response.raise_for_status()
@@ -100,7 +106,7 @@ class LottoScraper:
                     break
         
         # Fallback to Selenium for dynamic content
-        return self._fetch_with_selenium()
+        return self._fetch_with_selenium(prog, anno)
 
     def _contains_lottery_data(self, html_content: str) -> bool:
         """
@@ -125,10 +131,14 @@ class LottoScraper:
         # If we find at least 3 indicators, assume data is present
         return found_indicators >= 3
 
-    def _fetch_with_selenium(self) -> Optional[str]:
+    def _fetch_with_selenium(self, prog: int, anno: int) -> Optional[str]:
         """
         Fetch page using Selenium to handle dynamic content.
         
+        Args:
+            prog: Program number (drawing number)
+            anno: Year
+            
         Returns:
             HTML content or None if failed
         """
@@ -136,8 +146,10 @@ class LottoScraper:
             if not self.driver and not self._setup_driver():
                 return None
             
-            logger.info("Fetching lottery data with Selenium")
-            self.driver.get(LOTTO_URL)
+            # Build URL with prog and anno parameters
+            url = f"{LOTTO_BASE_URL}?prog={prog}&anno={anno}"
+            logger.info(f"Fetching lottery data with Selenium from: {url}")
+            self.driver.get(url)
             
             # Wait for the page to load completely
             WebDriverWait(self.driver, 15).until(
@@ -344,16 +356,20 @@ class LottoScraper:
                         logger.info(f"Found numbers for {city}: {numbers[:5]}")
                     break
     
-    def get_latest_results(self) -> Dict:
+    def get_latest_results(self, prog: int, anno: int) -> Dict:
         """
         Get the latest lottery results.
+        
+        Args:
+            prog: Program number (drawing number)
+            anno: Year
         
         Returns:
             Dictionary containing lottery results or empty dict if failed
         """
-        logger.info("Starting lottery results scraping")
+        logger.info(f"Starting lottery results scraping for prog={prog}, anno={anno}")
         
-        html_content = self.fetch_page()
+        html_content = self.fetch_page(prog, anno)
         if not html_content:
             logger.error("Failed to fetch lottery page")
             return {}
