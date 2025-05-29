@@ -6,8 +6,8 @@ BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 if not BOT_TOKEN:
     raise ValueError("TELEGRAM_BOT_TOKEN environment variable is required")
 
-# Scraping configuration
-LOTTO_URL = "https://www.adm.gov.it/portale/estrazioni"
+# Scraping configuration  
+LOTTO_URL = "https://www.adm.gov.it/portale/monopoli/giochi/gioco-del-lotto/lotto_g"
 REQUEST_TIMEOUT = 30
 MAX_RETRIES = 3
 RETRY_DELAY = 5
