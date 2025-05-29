@@ -1,4 +1,4 @@
-modules = ["python-3.10"]
+modules = ["python-3.11"]
 
 [nix]
 channel = "stable-24_05"
@@ -31,10 +31,6 @@ args = "Working Bot"
 [[workflows.workflow.tasks]]
 task = "workflow.run"
 args = "Updated Lottery Bot"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Updated Lottery Bot Python 3.10"
 
 [[workflows.workflow]]
 name = "Lottery Bot"
@@ -75,14 +71,6 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python updated_lottery_bot.py"
-
-[[workflows.workflow]]
-name = "Updated Lottery Bot Python 3.10"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "python3.10 updated_lottery_bot.py"
 
 [deployment]
 run = ["sh", "-c", "uv add python-telegram-bot requests beautifulsoup4 && python main.py"]
